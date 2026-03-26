@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.ownerUid;
+    }
+    
+    function isCompany() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'company';
+    }
+    
+    function isInvestor() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'investor';
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+    
+    // Companies collection
+    match /companies/{companyId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && (request.resource.data.ownerUid == request.auth.uid);
+    }
+    
+    // Financials collection
+    match /financials/{reportId} {
+      allow read: if isAuthenticated() && (resource.data.companyUid == request.auth.uid || isInvestor());
+      allow write: if isAuthenticated() && (request.resource.data.companyUid == request.auth.uid);
+    }
+    
+    // Strategies collection
+    match /strategies/{strategyId} {
+      allow read: if isAuthenticated() && (resource.data.companyUid == request.auth.uid || isInvestor());
+      allow write: if isAuthenticated() && (request.resource.data.companyUid == request.auth.uid);
+    }
+    
+    // Ratings collection
+    match /ratings/{ratingId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Only server/admin should write ratings (simulated for now)
+    }
+  }
+}

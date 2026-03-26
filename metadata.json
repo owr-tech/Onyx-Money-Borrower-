@@ -1,0 +1,7 @@
+{
+  "name": "Onyx borrower",
+  "description": "Plateforme B2B de vérification d'investissement avec calcul d'indice de confiance automatisé.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

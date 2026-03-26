@@ -1,0 +1,106 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Utilisateur de la plateforme (Entreprise ou Investisseur)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["company", "investor"] },
+        "displayName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "CompanyProfile": {
+      "title": "Profil d'Entreprise",
+      "description": "Informations légales et KYC de l'entreprise",
+      "type": "object",
+      "properties": {
+        "ownerUid": { "type": "string" },
+        "companyName": { "type": "string" },
+        "address": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "nifNumber": { "type": "string" },
+        "idCardUrl": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerUid", "companyName", "nifNumber"]
+    },
+    "FinancialData": {
+      "title": "Données Financières",
+      "description": "Rapports financiers périodiques",
+      "type": "object",
+      "properties": {
+        "companyUid": { "type": "string" },
+        "purchases": { "type": "number" },
+        "sales": { "type": "number" },
+        "expenses": { "type": "number" },
+        "revenue": { "type": "number" },
+        "profit": { "type": "number" },
+        "period": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["companyUid", "purchases", "sales", "expenses"]
+    },
+    "StrategyWarranty": {
+      "title": "Stratégie et Garanties",
+      "description": "Documents stratégiques et preuves de garantie financière",
+      "type": "object",
+      "properties": {
+        "companyUid": { "type": "string" },
+        "marketingStrategy": { "type": "string" },
+        "salesStrategy": { "type": "string" },
+        "warrantyProofUrl": { "type": "string" },
+        "isWarrantyCertified": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["companyUid"]
+    },
+    "ConfidenceRating": {
+      "title": "Indice de Confiance",
+      "description": "Score calculé par l'algorithme",
+      "type": "object",
+      "properties": {
+        "companyUid": { "type": "string" },
+        "score": { "type": "number" },
+        "readiness": { "type": "string", "enum": ["Low", "Medium", "High"] },
+        "isPromoted": { "type": "boolean" },
+        "breakdown": {
+          "type": "object",
+          "properties": {
+            "financialHealth": { "type": "number" },
+            "documentation": { "type": "number" },
+            "warranty": { "type": "number" }
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["companyUid", "score"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Profil utilisateur"
+    },
+    "/companies/{companyId}": {
+      "schema": "CompanyProfile",
+      "description": "Profil légal de l'entreprise"
+    },
+    "/financials/{reportId}": {
+      "schema": "FinancialData",
+      "description": "Rapports financiers"
+    },
+    "/strategies/{strategyId}": {
+      "schema": "StrategyWarranty",
+      "description": "Stratégies et garanties"
+    },
+    "/ratings/{ratingId}": {
+      "schema": "ConfidenceRating",
+      "description": "Scores de confiance"
+    }
+  }
+}
