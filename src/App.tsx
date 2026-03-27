@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { MobileContainer } from './components/layout/MobileContainer';
 import { CompanyDashboard } from './components/company/CompanyDashboard';
-import { InvestorDashboard } from './components/investor/InvestorDashboard';
-import { Loader2, Building2, TrendingUp } from 'lucide-react';
+import { Loader2, Building2 } from 'lucide-react';
 import { UserProfile } from './types';
 
 export default function App() {
@@ -47,27 +46,8 @@ export default function App() {
                 <Building2 className="w-6 h-6 text-onyx-blue" />
               </div>
               <div className="text-left">
-                <p className="text-sm opacity-80 font-medium">Tester comme</p>
-                <p className="text-lg">Entreprise</p>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => setMockProfile({ 
-                uid: 'demo-investor', 
-                role: 'investor', 
-                displayName: 'Investisseur Démo', 
-                email: 'investor@onyx.com', 
-                createdAt: new Date().toISOString() 
-              })}
-              className="w-full bg-white border-2 border-neutral-200 text-neutral-800 p-6 rounded-2xl font-bold flex items-center gap-4 transition-all active:scale-95 hover:border-onyx-yellow hover:text-onyx-blue"
-            >
-              <div className="w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <div className="text-left">
-                <p className="text-sm text-neutral-400 font-medium">Tester comme</p>
-                <p className="text-lg">Investisseur</p>
+                <p className="text-sm opacity-80 font-medium">Accéder à l'application</p>
+                <p className="text-lg">Espace Entreprise</p>
               </div>
             </button>
           </div>
@@ -84,11 +64,9 @@ export default function App() {
     <MobileContainer>
       {currentProfile?.role === 'company' ? (
         <CompanyDashboard />
-      ) : currentProfile?.role === 'investor' ? (
-        <InvestorDashboard />
       ) : (
         <div className="p-8 text-center">
-          <p className="text-red-500">Erreur: Profil non trouvé ou rôle invalide.</p>
+          <p className="text-red-500">Erreur: Profil non trouvé ou rôle non autorisé.</p>
           <button 
             onClick={() => {
               setMockProfile(null);
